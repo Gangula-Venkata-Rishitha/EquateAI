@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fafafa;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+  --accent-muted: #1d4ed8;
+  --equation-node: #eef4ff;
+  --variable-node: #ffffff;
+  --concept-node: #f3f0ff;
+  --constant-node: #fff7ed;
+  --edge-default: #cbd5e1;
+  --edge-depends: #3b82f6;
+  --edge-defines: #a855f7;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+.graph-container {
+  background: #fafafa;
+}
+
+.rf-node-card {
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  border: 1px solid var(--border);
+}
+
+.rf-node-equation {
+  background: var(--equation-node);
+}
+
+.rf-node-variable {
+  background: var(--variable-node);
+}
+
+.rf-node-concept {
+  background: var(--concept-node);
+}
+
+.rf-node-constant {
+  background: var(--constant-node);
+}
+
+.rf-node-dimmed {
+  opacity: 0.3;
+}
+
+.rf-edge-highlight {
+  stroke-width: 2;
+}
