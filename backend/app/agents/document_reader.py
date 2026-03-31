@@ -1,12 +1,11 @@
 """Document Reader Agent - reads PDF and DOCX scientific documents."""
 from pathlib import Path
-from typing import Iterator
 
 from app.agents.base import TextLine
 
 
 class DocumentReaderAgent:
-    """Read scientific documents (PDF, DOCX) and yield TextLine objects."""
+    """Read scientific documents/images and yield TextLine objects."""
 
     def read(self, file_path: Path) -> list[TextLine]:
         """Read document and return list of text lines with page and line numbers."""
@@ -15,6 +14,8 @@ class DocumentReaderAgent:
             return self._read_pdf(file_path)
         if path_str.lower().endswith(".docx"):
             return self._read_docx(file_path)
+        if file_path.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}:
+            return self._read_image(file_path)
         raise ValueError(f"Unsupported format: {file_path.suffix}")
 
     def _read_pdf(self, file_path: Path) -> list[TextLine]:
@@ -55,4 +56,29 @@ class DocumentReaderAgent:
             if text:
                 # DOCX doesn't have page numbers easily; use paragraph index as proxy
                 lines.append(TextLine(content=text, page=1, line_no=len(lines) + 1))
+        return lines
+
+    def _read_image(self, file_path: Path) -> list[TextLine]:
+        """Extract text from image using OCR (pytesseract)."""
+        try:
+            from PIL import Image
+        except ImportError:
+            raise ImportError("Pillow is required for image support. pip install Pillow")
+
+        try:
+            import pytesseract
+        except ImportError:
+            raise ImportError("pytesseract is required for OCR image support. pip install pytesseract")
+
+        try:
+            image = Image.open(file_path)
+            text = pytesseract.image_to_string(image)
+        except Exception as exc:
+            raise RuntimeError(f"Failed OCR extraction for image: {exc}") from exc
+
+        lines: list[TextLine] = []
+        for i, raw in enumerate(text.splitlines(), start=1):
+            line = raw.strip()
+            if line:
+                lines.append(TextLine(content=line, page=1, line_no=i))
         return lines

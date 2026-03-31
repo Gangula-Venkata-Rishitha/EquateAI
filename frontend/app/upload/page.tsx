@@ -34,11 +34,13 @@ export default function UploadPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <main className="mx-auto max-w-xl px-6 py-12">
         <h1 className="mb-6 text-2xl font-semibold">Upload document</h1>
-        <p className="mb-4 text-zinc-400">Supported: PDF, DOCX</p>
+        <p className="mb-4 text-zinc-400">
+          Supported: PDF, DOCX, PNG, JPG, JPEG, BMP, TIF, TIFF, WEBP
+        </p>
         <div className="mb-4">
           <input
             type="file"
-            accept=".pdf,.docx"
+            accept=".pdf,.docx,.png,.jpg,.jpeg,.bmp,.tif,.tiff,.webp"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="block w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-2 text-sm file:mr-4 file:rounded file:border-0 file:bg-[var(--accent)] file:px-4 file:py-2 file:text-white"
           />

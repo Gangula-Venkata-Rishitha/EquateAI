@@ -5,6 +5,8 @@ uvicorn[standard]==0.32.1
 # Document processing
 PyMuPDF==1.25.2
 python-docx==1.1.2
+Pillow==11.1.0
+pytesseract==0.3.13
 
 # Math & symbolic
 sympy==1.13.3
@@ -28,6 +30,5 @@ pydantic==2.10.3
 pydantic-settings==2.6.1
 python-dotenv==1.0.1
 
-# Optional: OCR (future)
-# pytesseract==0.3.13
+# Optional: OCR improvements (future)
 # opencv-python-headless==4.10.0.84

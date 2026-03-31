@@ -16,12 +16,16 @@ def upload_document(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
-    """Upload a PDF or DOCX document. Returns document_id."""
+    """Upload a PDF, DOCX, or supported image document. Returns document_id."""
     if not file.filename:
         raise HTTPException(400, "Missing filename")
     suffix = Path(file.filename).suffix.lower()
-    if suffix not in (".pdf", ".docx"):
-        raise HTTPException(400, "Only PDF and DOCX are supported")
+    allowed_suffixes = {".pdf", ".docx", ".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
+    if suffix not in allowed_suffixes:
+        raise HTTPException(
+            400,
+            "Unsupported file type. Supported: PDF, DOCX, PNG, JPG, JPEG, BMP, TIF, TIFF, WEBP",
+        )
     upload_dir = Path(settings.upload_dir)
     upload_dir.mkdir(parents=True, exist_ok=True)
     path = upload_dir / file.filename
