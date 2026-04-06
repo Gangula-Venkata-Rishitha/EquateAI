@@ -41,7 +41,13 @@ class TextToEquationService:
             "Return only the equation, in plain ASCII math (use *, /, ^, parentheses) and a single '=' if needed.\n\n"
             f"Description: {text}"
         )
-        eq = self.llm.chat(prompt, model=self.llm.equation_model)
+        eq = self.llm.chat(
+            prompt,
+            model=self.llm.equation_model,
+            query=text,
+            domain_context=None,
+            require_context=False,
+        )
         # Best-effort cleanup: take first line
         eq_line = eq.splitlines()[0].strip()
         return ParsedEquationText(raw_text=eq_line)

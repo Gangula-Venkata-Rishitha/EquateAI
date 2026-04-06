@@ -59,7 +59,13 @@ class NaturalLanguageConverter:
             "Avoid extra commentary; just describe what the equation is saying.\n\n"
             f"Equation: {raw}"
         )
-        explanation = self.llm.chat(prompt, model=self.llm.equation_model)
+        explanation = self.llm.chat(
+            prompt,
+            model=self.llm.equation_model,
+            query=raw,
+            domain_context=f"Equation: {raw}",
+            require_context=False,
+        )
         eq.natural_language = explanation
         return explanation
 

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.core.config import settings
+from app.services.domain_guard import DomainGuard, OUT_OF_SCOPE_MESSAGE
 
 
 @dataclass
@@ -23,11 +24,33 @@ class LLMClient:
         except ImportError:
             raise ImportError("ollama package required. pip install ollama")
 
-    def chat(self, prompt: str, *, model: str | None = None, system: str | None = None) -> str:
+    def chat(
+        self,
+        prompt: str,
+        *,
+        model: str | None = None,
+        system: str | None = None,
+        query: str | None = None,
+        domain_context: str | None = None,
+        require_context: bool = False,
+    ) -> str:
         """Send a single-turn chat prompt to a model."""
+        guard = DomainGuard()
+        guard_check = guard.check(
+            query=query or prompt,
+            context=domain_context,
+            require_context=require_context,
+        )
+        if not guard_check.allowed:
+            return guard_check.reason or OUT_OF_SCOPE_MESSAGE
+
         messages: list[dict[str, Any]] = []
-        if system:
-            messages.append({"role": "system", "content": system})
+        messages.append(
+            {
+                "role": "system",
+                "content": system or guard.build_system_prompt(context=domain_context),
+            }
+        )
         messages.append({"role": "user", "content": prompt})
         try:
             client = self._client()
